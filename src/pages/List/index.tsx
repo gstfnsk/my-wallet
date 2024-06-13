@@ -8,6 +8,9 @@ import FinanceHistoryCard from "../../components/FinanceHistoryCard";
 import gains from '../../repositories/gains';
 import expenses from '../../repositories/expenses';
 
+import formatCurrency from "../../utils/formatCurrency";
+import formatDate from "../../utils/formatDate";
+
 interface IData {
     id: string,
     description: string,
@@ -20,8 +23,8 @@ interface IData {
 const List: React.FC = () => {
 
     const [data, setData] = useState<IData[]>([]); 
-
-    
+    const [monthSelection, setMonthSelection] = useState<string>(String(new Date().getMonth() + 1));
+    const [yearSelection, setYearSelection] = useState<string>(String(new Date().getFullYear()));
 
     const { type } = useParams(); 
 
@@ -46,25 +49,32 @@ const List: React.FC = () => {
     ];
 
     useEffect(() => {
-        const response = listData.map(item => {
+        const filteredDate = listData.filter(item => {
+            const date = new Date(item.date);
+            const month = String(date.getMonth() + 1);
+            const year = String(date.getFullYear());
+
+            return month === monthSelection && year === yearSelection;
+        });
+
+        const formattedDate = filteredDate.map(item => {
             return {
-                id: String(Math.random() * data.length),
+                id: String(Math.floor(Math.random() * data.length)),
                 description: item.description,
-                amountFormatted: item.amount,
+                amountFormatted: formatCurrency(Number(item.amount)),
                 frequency: item.frequency,
-                dateFormatted: item.date,
+                dateFormatted: formatDate(item.date),
                 tagColor: item.frequency ==='recorrente' ? '#4E41F0' : '#E44C4E',
             }
-        })
-        // console.log(response);
-        setData(response);
-    },[]);
+        });
+        setData(formattedDate);
+    },[listData, monthSelection, yearSelection, data.length]);
 
     return (
         <Container>
             <ContentHeader title={title.titleName} lineColor={title.titleColor}>
-                <SelectInput options={months}></SelectInput>
-                <SelectInput options={years}></SelectInput>
+                <SelectInput options={months} onChange={(e) => setMonthSelection(e.target.value)} defaultValue={monthSelection}/>
+                <SelectInput options={years} onChange={(e) => setYearSelection(e.target.value)} defaultValue={yearSelection}/>
             </ContentHeader>
 
             <Filters>
