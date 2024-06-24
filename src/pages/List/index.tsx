@@ -26,8 +26,8 @@ interface IData {
 const List: React.FC = () => {
 
     const [data, setData] = useState<IData[]>([]); 
-    const [monthSelection, setMonthSelection] = useState<string>(String(new Date().getMonth() + 1));
-    const [yearSelection, setYearSelection] = useState<string>(String(new Date().getFullYear()));
+    const [monthSelection, setMonthSelection] = useState<number>(new Date().getMonth() + 1);
+    const [yearSelection, setYearSelection] = useState<number>(new Date().getFullYear());
     const [frequencyFilterSelected, setfrequencyFilterSelected] = useState(['recorrente','eventual']);
 
     const { balanceType } = useParams(); 
@@ -61,6 +61,24 @@ const List: React.FC = () => {
         })
     },[]);
 
+    const handleMonthSelection = (month: string) => {
+        try {
+            const parseMonth = Number(month);
+            setMonthSelection(parseMonth);
+        } catch(e) {
+            throw new Error ('invalid month value. ')
+        }
+    }
+
+    const handleYearSelection = (year: string) => {
+        try {
+            const parseYear = Number(year);
+            setYearSelection(parseYear);
+        } catch(e) {
+            throw new Error ('invalid year value. ')
+        }
+    }
+
     const years = useMemo(() => {
         let uniqueYears: number[] = [];
         listData.forEach(item => {
@@ -92,8 +110,8 @@ const List: React.FC = () => {
         const { data } = pageData;
         const filteredDate = data.filter(item => {
             const date = new Date(item.date);
-            const month = String(date.getMonth() + 1);
-            const year = String(date.getFullYear());
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
 
             return month === monthSelection && year === yearSelection && frequencyFilterSelected.includes(item.frequency);
         });
@@ -114,8 +132,8 @@ const List: React.FC = () => {
     return (
         <Container>
             <ContentHeader title={pageData.title} lineColor={pageData.lineColor}>
-                <SelectInput options={months} onChange={(e) => setMonthSelection(e.target.value)} defaultValue={monthSelection}/>
-                <SelectInput options={years} onChange={(e) => setYearSelection(e.target.value)} defaultValue={yearSelection}/>
+                <SelectInput options={months} onChange={(e) => handleMonthSelection(e.target.value)} defaultValue={monthSelection}/>
+                <SelectInput options={years} onChange={(e) => handleYearSelection(e.target.value)} defaultValue={yearSelection}/>
             </ContentHeader>
 
             <Filters>
