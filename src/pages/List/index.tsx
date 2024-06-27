@@ -32,15 +32,11 @@ const List: React.FC = () => {
 
     const { balanceType } = useParams(); 
 
-    const listData = useMemo(() => {
-        return balanceType === 'income-balance' ? gains : expenses;
-    },[balanceType]);
-
     const pageData = useMemo(() => {
         return balanceType === 'income-balance' ?
         {
             title: 'Entradas',
-            lineColor: '#F7931B',
+            lineColor: '#4E41F0',
             data: gains
         }
         :
@@ -81,7 +77,8 @@ const List: React.FC = () => {
 
     const years = useMemo(() => {
         let uniqueYears: number[] = [];
-        listData.forEach(item => {
+        const {data} = pageData;
+        data.forEach(item => {
             const date = new Date(item.date);
             const year = date.getFullYear();
             if (!uniqueYears.includes(year)) {
@@ -94,7 +91,7 @@ const List: React.FC = () => {
                 label: year
             }
         });
-    },[]);
+    },[pageData]);
 
     const handleFrequencyClick = (frequency: string) => {
         const alreadySelected = frequencyFilterSelected.findIndex(item => item === frequency);
@@ -127,7 +124,7 @@ const List: React.FC = () => {
             }
         });
         setData(formattedDate);
-        },[data, monthSelection, yearSelection, data.length, frequencyFilterSelected]);
+        },[pageData, monthSelection, yearSelection, data.length, frequencyFilterSelected]);
 
     return (
         <Container>

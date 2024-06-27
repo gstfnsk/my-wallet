@@ -1,11 +1,11 @@
 import React from "react";
 import { Container } from './styles';
 
-type ContentProps = {
+type MainContentProps = {
     children: React.ReactNode;
 };
 
-const Content: React.FC<ContentProps> = ({ children }) => {
+const MainContent: React.FC<MainContentProps> = ({ children }) => {
     return (
         <Container>
             {children}
@@ -13,4 +13,4 @@ const Content: React.FC<ContentProps> = ({ children }) => {
     );
 };
 
-export default Content;
+export default MainContent;

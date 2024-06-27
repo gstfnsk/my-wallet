@@ -3,7 +3,7 @@ import { Grid } from './styles';
 
 import Aside from '../Aside';
 import MainHeader from '../MainHeader';
-import Content from '../Content';
+import MainContent from '../MainContent';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -14,9 +14,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Grid>
             <MainHeader />
             <Aside />
-            <Content>
+            <MainContent>
                 {children}
-            </Content>
+            </MainContent>
         </Grid>
     );
 };
